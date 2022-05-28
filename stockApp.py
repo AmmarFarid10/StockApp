@@ -154,20 +154,6 @@ def KNN(df):
     st.pyplot(fig)
 
 
-    
-def getClassifier(classifier):
-    if classifier == 'SVM':
-        c = st.sidebar.slider(label='Choose value of C' , min_value=0.0001, max_value=10.0)
-        model = SVC(C=c)
-    elif classifier == 'KNN':
-        neighbors = st.sidebar.slider(label='Choose Number of Neighbors',min_value=1,max_value=20)
-        model = KNeighborsClassifier(n_neighbors = neighbors)
-    else:
-        max_depth = st.sidebar.slider('max_depth', 2, 10)
-        n_estimators = st.sidebar.slider('n_estimators', 1, 100)
-        model = RandomForestClassifier(max_depth = max_depth , n_estimators= n_estimators,random_state= 1)
-    return model
-
 
 def SVM(df):
     df.index = pd.to_datetime(df['Date'])  
@@ -230,6 +216,9 @@ def SVM(df):
 st.title("Stock Market Dashboard")
 
 # Description
+st.text("CopyRights: Ammar Ahmad Farid")
+
+st.text("Created on 28 May 2022")
 
 #sidebar
 sideBar = st.sidebar
