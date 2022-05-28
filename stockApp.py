@@ -10,7 +10,6 @@ from sklearn.metrics import precision_score, recall_score
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.use('TkAgg')
 
 import seaborn as sns
 import pandas as pd
