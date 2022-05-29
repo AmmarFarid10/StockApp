@@ -1,30 +1,18 @@
 import streamlit as st
-from sklearn.datasets import load_wine, load_breast_cancer, load_iris
 from  sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import plot_confusion_matrix, plot_roc_curve, plot_precision_recall_curve
-from sklearn.metrics import precision_score, recall_score
-from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import matplotlib
 from sklearn.model_selection import train_test_split, GridSearchCV
-
-#matplotlib.use('TkAgg')
-
 import seaborn as sns
 import pandas as pd
 import warnings
-from sklearn.svm import SVC
 import numpy as np
 from sklearn.metrics import accuracy_score
 warnings.filterwarnings("ignore", category=FutureWarning)
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-
-from io import StringIO
 def random_forest(df):
     df.index = pd.to_datetime(df['Date'])  
         # drop The original date column
@@ -62,10 +50,8 @@ def random_forest(df):
     
     df['Predicted_Signal'] = rf_gs.predict(X)
     from sklearn import metrics
-#accuracy
-    pred = rf_gs.predict(X_test)
+    #Calculating the accuracy
 
-    print("acuracy:", metrics.accuracy_score(y_test,y_pred=pred))
     test_score = round(rf_gs.score(X_test, y_test), 2)
     train_score = round(rf_gs.score(X_train, y_train), 2)
     accuracy=test_score
@@ -82,13 +68,13 @@ def random_forest(df):
         # Plot Strategy Cumulative returns 
     df['Cum_Strategy'] = df['Strategy_Return'].cumsum()
     plt.style.use('seaborn-darkgrid')
-    df=df.dropna()
+    df=df.dropna() #Dropping the NaN
 
-    fig,ax=plt.subplots()
-    ax.plot(df['Cum_Ret'],color='red')
-    ax.plot(df['Cum_Strategy'],color='blue')
+    chart_data = pd.DataFrame(
+    df,
+    columns=['Cum_Ret', 'Cum_Strategy'])
 
-    st.pyplot(fig)
+    st.line_chart(chart_data)
 
     
 def KNN(df):
@@ -125,10 +111,8 @@ def KNN(df):
     
     df['Predicted_Signal'] = knn_gs.predict(X)
     from sklearn import metrics
-#accuracy
-    pred = knn_gs.predict(X_test)
+    #Calculating the accuracy
 
-    print("acuracy:", metrics.accuracy_score(y_test,y_pred=pred))
     test_score = round(knn_gs.score(X_test, y_test), 2)
     train_score = round(knn_gs.score(X_train, y_train), 2)
     accuracy=test_score
@@ -145,13 +129,13 @@ def KNN(df):
         # Plot Strategy Cumulative returns 
     df['Cum_Strategy'] = df['Strategy_Return'].cumsum()
     plt.style.use('seaborn-darkgrid')
-    df=df.dropna()
+    df=df.dropna() # Dropping the NaN
 
-    fig,ax=plt.subplots()
-    ax.plot(df['Cum_Ret'],color='red')
-    ax.plot(df['Cum_Strategy'],color='blue')
+    chart_data = pd.DataFrame(
+    df,
+    columns=['Cum_Ret', 'Cum_Strategy'])
 
-    st.pyplot(fig)
+    st.line_chart(chart_data)
 
 
 
@@ -183,10 +167,8 @@ def SVM(df):
 
     df['Predicted_Signal'] = cls.predict(X)
     from sklearn import metrics
-#accuracy
-    pred = cls.predict(X_test)
+    # Calculating the accuracy
 
-    print("acuracy:", metrics.accuracy_score(y_test,y_pred=pred))
     test_score = round(cls.score(X_test, y_test), 2)
     train_score = round(cls.score(X_train, y_train), 2)
     accuracy=test_score
@@ -203,13 +185,12 @@ def SVM(df):
         # Plot Strategy Cumulative returns 
     df['Cum_Strategy'] = df['Strategy_Return'].cumsum()
     plt.style.use('seaborn-darkgrid')
-    df=df.dropna()
+    df=df.dropna() # Dropping NaN rows
+    chart_data = pd.DataFrame(
+    df,
+    columns=['Cum_Ret', 'Cum_Strategy'])
 
-    fig,ax=plt.subplots()
-    ax.plot(df['Cum_Ret'],color='red')
-    ax.plot(df['Cum_Strategy'],color='blue')
-
-    st.pyplot(fig)
+    st.line_chart(chart_data)# Dsiplaying Line chart
 
 
 # Title
@@ -223,10 +204,8 @@ st.text("Created on 28 May 2022")
 #sidebar
 sideBar = st.sidebar
 display = sideBar.checkbox('Display Dataset')
-
-uploaded_file = sideBar.file_uploader("Choose a CSV file")
+uploaded_file = sideBar.file_uploader("Upload the dataset")
 classifier = sideBar.selectbox('Which Classifier do you want to use?',('SVM' , 'KNN' , 'Random Forest'))
-
 
 if uploaded_file is not None:
     if uploaded_file.name.endswith('.csv'):
@@ -240,13 +219,6 @@ if uploaded_file is not None:
             random_forest(df)
         elif classifier == 'KNN':
             KNN(df)
-
-
-  
-
-
-
-
     elif uploaded_file.name.endswith('.xlsx'):
         df = pd.read_excel(uploaded_file)
         if display:
@@ -257,8 +229,5 @@ if uploaded_file is not None:
             random_forest(df)
         elif classifier == 'KNN':
             KNN(df)
-
     else:
         sideBar.write("Please upload csv or excel files only")
-
-
